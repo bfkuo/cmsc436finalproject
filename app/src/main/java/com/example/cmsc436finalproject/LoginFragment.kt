@@ -12,10 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.example.cmsc436finalproject.databinding.FragmentLoginBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -23,7 +19,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentLoginBinding
 
@@ -51,17 +46,17 @@ class LoginFragment : Fragment() {
             if (task.isSuccessful) {
                 Toast.makeText(
                     requireContext(),
-                    "Login successful!",
+                    getString(R.string.welcome),
                     Toast.LENGTH_LONG
                 ).show()
 
-                // TODO: navigate to correct fragment
+                // TODO: navigate to post login fragment
                 // findNavController().navigate()
 
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "Login failed!",
+                    getString(R.string.login_failed),
                     Toast.LENGTH_LONG
                 ).show()
             }
