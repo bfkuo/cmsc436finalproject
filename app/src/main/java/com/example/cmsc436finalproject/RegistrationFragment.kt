@@ -41,7 +41,7 @@ class RegistrationFragment : Fragment() {
         if (!validator.validEmail(email)) {
             Toast.makeText(
                 requireContext(),
-                getString(R.string.invalid_username),
+                getString(R.string.invalid_email),
                 Toast.LENGTH_LONG
             ).show()
 
