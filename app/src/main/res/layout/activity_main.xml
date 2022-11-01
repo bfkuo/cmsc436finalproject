@@ -54,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accountButton" />
 
-<!--    <ImageView-->
+<!--    <Button-->
 <!--        android:id="@+id/imageView2"-->
 <!--        android:layout_width="374dp"-->
 <!--        android:layout_height="461dp"-->
@@ -62,6 +62,7 @@
 <!--        android:layout_marginTop="40dp"-->
 <!--        android:layout_marginEnd="10dp"-->
 <!--        android:layout_marginBottom="40dp"-->
+<!--        android:text="Upload or take picture"-->
 <!--        app:layout_constraintBottom_toTopOf="@+id/saveMenu"-->
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
@@ -73,9 +74,8 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/ic_baseline_save_alt_24"
-        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -2,11 +2,10 @@ package com.example.cmsc436finalproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.*
 import com.google.firebase.provider.FirebaseInitProvider
 import android.graphics.Color
-import android.view.ViewGroup
+import android.view.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +20,43 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
+        val saveButton: Button = findViewById(R.id.saveMenu)
+        saveButton.setOnClickListener { showPopup(it) }
+
         setupDropdowns()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.image_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.copy_text -> Toast.makeText(this, "Copy text selected", Toast.LENGTH_SHORT).show()
+            R.id.copy_image -> Toast.makeText(this, "Copy image selected", Toast.LENGTH_SHORT).show()
+            R.id.save_image -> Toast.makeText(this, "Save image selected", Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showPopup(view: View) {
+        val popup = PopupMenu(this, view)
+
+        popup.menuInflater.inflate(R.menu.image_menu, popup.menu)
+        
+
+        popup.show()
+
+        popup.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.copy_text -> Toast.makeText(this, "Copy text selected", Toast.LENGTH_SHORT).show()
+                R.id.copy_image -> Toast.makeText(this, "Copy image selected", Toast.LENGTH_SHORT).show()
+                R.id.save_image -> Toast.makeText(this, "Save image selected", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
     }
 
     private fun setupDropdowns() {
