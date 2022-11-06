@@ -1,20 +1,21 @@
 package com.example.cmsc436finalproject
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.google.firebase.provider.FirebaseInitProvider
-import android.graphics.Color
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import me.bush.translator.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
+    private var text: String = "Bush's translator is so cool!"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,58 +31,49 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun translate(text: String) {
+        lifecycleScope.launch {
+            val translator = Translator()
+
+            val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
+            Log.i("TRANSLATOR", translation.translatedText) // Переводчик Буша такой классный!
+            translation.pronunciation?.let { Log.i("PRONUNCIATION", it) } // Perevodchik Busha takoy klassnyy!
+            Log.i("LANGUAGES", translation.sourceLanguage.toString() + " -> " + translation.targetLanguage) // English
+        }
+    }
+
     private fun setupDropdowns() {
 
         val translateFrom: Spinner = findViewById(R.id.translateFrom)
         val translateTo : Spinner = findViewById(R.id.translateTo)
 
-        val languages = resources.getStringArray(R.array.languages)
-
-//        ArrayAdapter.createFromResource(this, languages, android.R.layout.simple_spinner_item).also { adapter ->
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
-//
-//            translateFrom.adapter = adapter
-//            translateTo.adapter = adapter
-//        }
+        val fromLanguages = resources.getStringArray(R.array.languages)
+        val toLanguages = resources.getStringArray(R.array.languages).drop(1)
 
         // LOOK INTO: mini text-view "hint" above
-//        val adapter2 = object: ArrayAdapter.createFromResource
+        val fromAdapter = object : ArrayAdapter<String>(this,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            fromLanguages) {}
 
-        val adapter = object : ArrayAdapter<String>(this,androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, languages) {
-            override fun isEnabled(position: Int): Boolean {
-                // Disable the first item from Spinner
-                // First item will be used for hint
-                return position != 0
-            }
+        val toAdapter = object : ArrayAdapter<String>(this,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            toLanguages) {}
 
-            override fun getDropDownView(
-                position: Int,
-                convertView: View?,
-                parent: ViewGroup
-            ): View {
-                val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
-                //set the color of first item in the drop down list to gray
-                if (position == 0) {
-                    view.setTextColor(Color.GRAY)
-                }
-                return view
-            }
-        }
-        translateFrom.adapter = adapter
-        translateTo.adapter = adapter
+        translateFrom.adapter = fromAdapter
+        translateTo.adapter = toAdapter
 
         translateFrom.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                val item = languages[pos]
-                if (pos == 0){
-                    (view as TextView).setTextColor(Color.GRAY)
+                val item = fromLanguages[pos]
+
+                val language = checkNotNull(languageOf(fromLanguages[pos])) {
+                    Toast.makeText(this@MainActivity, "Invalid language to translate from", Toast.LENGTH_SHORT).show()
                 }
 
-                if (pos == 1) {
-                    viewModel.translate()
-                }
+                viewModel.from.value = language
+                translate(text)
 
                 Toast.makeText(this@MainActivity, "TranslateFrom $item selected", Toast.LENGTH_SHORT).show()
             }
@@ -91,10 +83,14 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                val item = languages[pos]
-                if (pos == 0){
-                    (view as TextView).setTextColor(Color.GRAY)
+                val item = toLanguages[pos]
+
+                val language = checkNotNull(languageOf(toLanguages[pos])) {
+                    Toast.makeText(this@MainActivity, "Invalid language to translate to", Toast.LENGTH_SHORT).show()
                 }
+
+                viewModel.to.value = language
+                translate(text)
 
                 Toast.makeText(this@MainActivity, "TranslateTo $item selected", Toast.LENGTH_SHORT).show()
             }
