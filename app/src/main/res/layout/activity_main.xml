@@ -4,80 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <Button
-        android:id="@+id/accountButton"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/account"
-        android:backgroundTint="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--    Translate From Dropdown    -->
-    <Spinner
-        android:id="@+id/translateFrom"
-        android:layout_width="170dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="65dp"
-        android:background="@drawable/dropdown_bg"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--    Swap Button (Visual)    -->
-    <ImageView
-        android:id="@+id/swapIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="65dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/swap"
-        android:contentDescription="@string/swap_icon"
-        app:layout_constraintEnd_toStartOf="@+id/translateTo"
-        app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintStart_toEndOf="@+id/translateFrom"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--    Translate To Dropdown    -->
-    <Spinner
-        android:id="@+id/translateTo"
-        android:layout_width="170dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/dropdown_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accountButton" />
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView2"-->
-<!--        android:layout_width="374dp"-->
-<!--        android:layout_height="461dp"-->
-<!--        android:layout_marginStart="10dp"-->
-<!--        android:layout_marginTop="40dp"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        android:layout_marginBottom="40dp"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/saveMenu"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/translateFrom"-->
-<!--        app:srcCompat="@drawable/ic_baseline_vertical_align_top_24" />-->
-
-    <Button
-        android:id="@+id/saveMenu"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/ic_baseline_save_alt_24"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    tools:context=".MainActivity"
+    android:id="@+id/container">
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

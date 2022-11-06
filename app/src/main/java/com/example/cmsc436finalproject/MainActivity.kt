@@ -7,11 +7,14 @@ import android.widget.*
 import com.google.firebase.provider.FirebaseInitProvider
 import android.graphics.Color
 import android.view.ViewGroup
+import com.example.cmsc436finalproject.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     var translateFromLanguage: String = ""
     var translateToLanguage: String = ""
+
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,9 +22,14 @@ class MainActivity : AppCompatActivity() {
         // Init firebase APIs
         FirebaseInitProvider()
 
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
 
-        setupDropdowns()
+        setContentView(binding.root)
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container, MainFragment())
+            .commitNow()
+
+        // setupDropdowns()
     }
 
     private fun setupDropdowns() {
