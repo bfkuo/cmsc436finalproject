@@ -2,6 +2,7 @@ package com.example.cmsc436finalproject
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,10 @@ class LoginFragment : Fragment() {
         auth = requireNotNull(FirebaseAuth.getInstance())
 
         binding.login.setOnClickListener { loginUserAccount() }
+        binding.toRegister.setOnClickListener{
+            findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
+            Log.i("loginFragment", "navigated to registration fragment")
+        }
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -51,7 +56,7 @@ class LoginFragment : Fragment() {
                 ).show()
 
                 // TODO: navigate to post login fragment
-                // findNavController().navigate()
+                // findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
 
             } else {
                 Toast.makeText(

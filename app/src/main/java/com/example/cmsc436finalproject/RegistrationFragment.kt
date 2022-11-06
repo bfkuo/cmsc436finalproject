@@ -1,5 +1,6 @@
 package com.example.cmsc436finalproject
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.cmsc436finalproject.databinding.FragmentRegistrationBinding
 import com.google.firebase.auth.FirebaseAuth
-
 
 class RegistrationFragment : Fragment() {
     private var validator = Validators()
@@ -29,7 +29,6 @@ class RegistrationFragment : Fragment() {
             Log.i(TAG, "Register button clicked")
             registerNewUser()
         }
-
         return binding.root
     }
 

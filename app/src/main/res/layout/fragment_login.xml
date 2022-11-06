@@ -8,7 +8,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".LoginFragment">
+    tools:context=".LoginFragment"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/welcome"
@@ -82,6 +83,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintVertical_bias="0.2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="Don't have an account yet?" />
+        <TextView
+            android:id="@+id/toRegister"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="@string/underline_register"
+            android:textColor="@color/teal_700"
+            android:clickable="true" />
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"

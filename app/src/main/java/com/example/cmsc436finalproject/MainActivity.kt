@@ -14,10 +14,10 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(ActivityMainBinding.inflate(layoutInflater).root)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.container, LoginFragment())
-                .commitNow()
-        }
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.beginTransaction()
+//                .add(R.id.container, LoginFragment())
+//                .commitNow()
+//        }
     }
 }

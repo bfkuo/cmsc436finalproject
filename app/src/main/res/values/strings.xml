@@ -7,6 +7,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_register">Register</string>
+    <string name="underline_register"><u>Register</u></string>
     <string name="welcome">Welcome !</string>
     <string name="invalid_email">Not a valid email</string>
     <string name="invalid_password">Password must be >8 characters and contain at least one number and letter</string>
