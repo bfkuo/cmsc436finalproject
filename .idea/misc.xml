@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.15770568847656252" />
         <entry key="app/src/main/res/layout/fragment_registration.xml" value="0.25" />
+        <entry key="app/src/main/res/xml/fileprovider.xml" value="0.1" />
       </map>
     </option>
   </component>
