@@ -12,12 +12,17 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.FileProvider
 import com.example.cmsc436finalproject.databinding.FragmentMainBinding
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
 class MainFragment : Fragment() {
@@ -33,27 +38,67 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(inflater, container, false)
 
         binding.takePhoto.setOnClickListener{
-            // TODO: ask user for camera permission
+            // if permission has been granted, take photo
+            when {
+                checkSelfPermission(requireContext(), PERMISSION) == PackageManager.PERMISSION_GRANTED -> {
+                    takePhoto()
+                }
 
-            val cameraIntent = Intent(ACTION)
-            photoFile = getPhotoFile(FILE_NAME)
+                // if user has previously denied permission, explain why permission required
+                shouldShowRequestPermissionRationale(PERMISSION) -> {
+                    binding.root.showSnackbar(
+                        R.string.need_permission_string,
+                        Snackbar.LENGTH_INDEFINITE,
+                        android.R.string.ok
+                    ) {
+                        requestPermissionLauncher.launch(PERMISSION)
+                    }
+                }
 
-            // create content URI that allows temporary access of URI to camera app
-            val fileProvider = FileProvider.getUriForFile(requireContext(),
-                "com.example.cmsc436finalproject.fileprovider", photoFile)
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+                // user hasn't given permission yet
+                else -> {
+                    requestPermissionLauncher.launch(PERMISSION)
+                }
+            }
+        }
 
-            try {
-                startActivityForResult(cameraIntent, REQUEST_CODE)
-            } catch (e: ActivityNotFoundException) {
+        return binding.root
+    }
+
+    private val requestPermissionLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                takePhoto()
+            } else {
                 Toast.makeText(
                     requireContext(),
-                    "Unable to open camera",
-                    Toast.LENGTH_LONG
+                    getString(R.string.need_permission_string),
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
-        return binding.root
+
+    private fun takePhoto() {
+        Log.i("main fragment", "this is the take photo function")
+        val cameraIntent = Intent(ACTION)
+        photoFile = getPhotoFile(FILE_NAME)
+
+        // create content URI that allows temporary access of URI to camera app
+        val fileProvider = FileProvider.getUriForFile(requireContext(),
+            "com.example.cmsc436finalproject.fileprovider", photoFile)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+
+        try {
+            startActivityForResult(cameraIntent, REQUEST_CODE)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(
+                requireContext(),
+                "Unable to open camera",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun getPhotoFile(fileName: String): File {
