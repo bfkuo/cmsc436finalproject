@@ -2,6 +2,7 @@ package com.example.cmsc436finalproject
 
 import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -18,6 +19,7 @@ import com.example.cmsc436finalproject.databinding.FragmentMainBinding
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
+    private val Fragment.packageManager get() = activity?.packageManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +30,18 @@ class MainFragment : Fragment() {
 
         binding.takePhoto.setOnClickListener{
             val cameraIntent = Intent(ACTION)
-            startActivityForResult(cameraIntent, REQUEST_CODE)
+            try {
+                startActivityForResult(cameraIntent, REQUEST_CODE)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(
+                    requireContext(),
+                    "Unable to open camera",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+//            if (cameraIntent.resolveActivity(fragment.packageManager?) != null) {
+//                startActivityForResult(cameraIntent, REQUEST_CODE)
+//            }
 
         }
         return binding.root

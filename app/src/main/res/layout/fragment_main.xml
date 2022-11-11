@@ -42,7 +42,7 @@
             <!--    Translate From Dropdown    -->
             <Spinner
                 android:id="@+id/translateFrom"
-                android:layout_width="170dp"
+                android:layout_width="155dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
@@ -68,7 +68,7 @@
             <!--    Translate To Dropdown    -->
             <Spinner
                 android:id="@+id/translateTo"
-                android:layout_width="170dp"
+                android:layout_width="155dp"
                 android:layout_height="32dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
@@ -80,7 +80,7 @@
         <ImageView
             android:id="@+id/photoView"
             android:layout_width="match_parent"
-            android:layout_height="589dp"
+            android:layout_height="400dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
