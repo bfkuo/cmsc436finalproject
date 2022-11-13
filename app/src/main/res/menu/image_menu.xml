@@ -11,13 +11,8 @@
     <menu>
             <item
                 android:id="@+id/copy_text"
-                android:icon="@drawable/ic_baseline_font_download_24"
-                android:title="Copy Text"
-                app:showAsAction="always|withText" />
-            <item
-                android:id="@+id/copy_image"
                 android:icon="@drawable/ic_baseline_copy"
-                android:title="Copy Image"
+                android:title="Copy Text"
                 app:showAsAction="always|withText" />
 
             <item

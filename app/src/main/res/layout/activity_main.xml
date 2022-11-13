@@ -62,7 +62,6 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="40dp"
-        android:onClick="showPopup"
         app:layout_constraintBottom_toTopOf="@+id/saveMenu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

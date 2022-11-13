@@ -50,10 +50,6 @@ class MainActivity : AppCompatActivity() {
                 clipboard.setPrimaryClip(clip)
             }
 
-            R.id.copy_image -> {
-                Toast.makeText(this, "Copy image selected", Toast.LENGTH_SHORT).show()
-            }
-
             R.id.save_image -> {
                 Toast.makeText(this, "Save image selected", Toast.LENGTH_SHORT).show()
             }
@@ -68,12 +64,7 @@ class MainActivity : AppCompatActivity() {
         popup.show()
 
         popup.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.copy_text -> Toast.makeText(this, "Copy text selected", Toast.LENGTH_SHORT).show()
-                R.id.copy_image -> Toast.makeText(this, "Copy image selected", Toast.LENGTH_SHORT).show()
-                R.id.save_image -> Toast.makeText(this, "Save image selected", Toast.LENGTH_SHORT).show()
-            }
-            true
+            onOptionsItemSelected(it)
         }
     }
 
