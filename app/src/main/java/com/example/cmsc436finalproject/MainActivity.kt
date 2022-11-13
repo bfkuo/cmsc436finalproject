@@ -34,11 +34,9 @@ class MainActivity : AppCompatActivity() {
     fun translate(text: String) {
         lifecycleScope.launch {
             val translator = Translator()
-
             val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
-            Log.i("TRANSLATOR", translation.translatedText) // Переводчик Буша такой классный!
-            translation.pronunciation?.let { Log.i("PRONUNCIATION", it) } // Perevodchik Busha takoy klassnyy!
-            Log.i("LANGUAGES", translation.sourceLanguage.toString() + " -> " + translation.targetLanguage) // English
+            viewModel.translated.value = translation.translatedText
+            Log.i("UPDATED", viewModel.translated.value)
         }
     }
 
@@ -67,7 +65,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 val item = fromLanguages[pos]
-
                 val language = checkNotNull(languageOf(fromLanguages[pos])) {
                     Toast.makeText(this@MainActivity, "Invalid language to translate from", Toast.LENGTH_SHORT).show()
                 }
@@ -83,16 +80,19 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                val item = toLanguages[pos]
+                var lang = toLanguages[pos]
+                if (lang.equals("Haitian Creole")) lang = "Hatian Creole"
+                if (lang.contains(' ')) lang = lang.replace(' ', '_')
+                if (lang.contains('(')) lang = lang.replace("(", "").replace(")", "")
 
-                val language = checkNotNull(languageOf(toLanguages[pos])) {
+                val language = checkNotNull(languageOf(lang)) {
                     Toast.makeText(this@MainActivity, "Invalid language to translate to", Toast.LENGTH_SHORT).show()
                 }
 
                 viewModel.to.value = language
                 translate(text)
 
-                Toast.makeText(this@MainActivity, "TranslateTo $item selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "TranslateTo $lang selected", Toast.LENGTH_SHORT).show()
             }
         }
 
