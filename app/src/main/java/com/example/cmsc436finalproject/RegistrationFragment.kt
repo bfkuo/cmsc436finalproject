@@ -67,9 +67,10 @@ class RegistrationFragment : Fragment() {
                 val user = hashMapOf("email" to auth.currentUser!!.email,
                                      "photos" to mutableListOf<String>())
                 db.collection("users")
-                    .add(user)
-                    .addOnSuccessListener { documentReference ->
-                        Log.i(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                    .document(auth.currentUser!!.uid)
+                    .set(user)
+                    .addOnSuccessListener {
+                        Log.i(TAG, "DocumentSnapshot successfully written!")
 
                         Toast.makeText(
                             requireContext(),
