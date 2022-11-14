@@ -11,11 +11,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.cmsc436finalproject.databinding.FragmentRegistrationBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class RegistrationFragment : Fragment() {
     private var validator = Validators()
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentRegistrationBinding
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,13 +64,30 @@ class RegistrationFragment : Fragment() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             binding.progressBar.visibility = View.GONE
             if (task.isSuccessful) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.welcome),
-                    Toast.LENGTH_LONG
-                ).show()
+                val user = hashMapOf("email" to auth.currentUser!!.email,
+                                     "photos" to mutableListOf<String>())
+                db.collection("users")
+                    .add(user)
+                    .addOnSuccessListener { documentReference ->
+                        Log.i(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
 
-                // TODO: navigate to logged in fragment
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.welcome),
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // TODO: navigate to logged in fragment
+                    }
+                    .addOnFailureListener{ e ->
+                        Log.i(TAG, "Error adding document", e)
+
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.registration_failed),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
             } else {
                 Toast.makeText(
                     requireContext(),
