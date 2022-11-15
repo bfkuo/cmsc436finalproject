@@ -10,7 +10,6 @@ import android.widget.*
 import com.google.firebase.provider.FirebaseInitProvider
 import androidx.lifecycle.ViewModelProvider
 
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             val translator = Translator()
             val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
             viewModel.translated.value = translation.translatedText
-            Log.i("UPDATED", viewModel.translated.value)
+            Toast.makeText(this@MainActivity, "UPDATED:" + viewModel.translated.value, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -54,14 +53,14 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    val test_text = "testing copy text"
+//    val test_text = "testing copy text"
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.copy_text -> {
                 Toast.makeText(this, "Copy text selected", Toast.LENGTH_SHORT).show()
 
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip: ClipData = ClipData.newPlainText("Copy Translated Text", test_text)
+                val clip: ClipData = ClipData.newPlainText("Copy Translated Text", viewModel.translated.value)
                 clipboard.setPrimaryClip(clip)
             }
 
@@ -115,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.from.value = language
                 translate(text)
 
-                Toast.makeText(this@MainActivity, "TranslateFrom $item selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -135,15 +134,13 @@ class MainActivity : AppCompatActivity() {
                 viewModel.to.value = language
                 translate(text)
 
-                Toast.makeText(this@MainActivity, "TranslateTo $lang selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, viewModel.translated.value, Toast.LENGTH_SHORT).show()
             }
         }
 
         limitDropDownHeight(translateFrom)
         limitDropDownHeight(translateTo)
     }
-
-
 
     private fun limitDropDownHeight(dropdown: Spinner) {
         val popup = Spinner::class.java.getDeclaredField("mPopup")
