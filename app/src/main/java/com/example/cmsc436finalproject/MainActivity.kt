@@ -1,5 +1,8 @@
 package com.example.cmsc436finalproject
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,6 +11,9 @@ import com.google.firebase.provider.FirebaseInitProvider
 import androidx.lifecycle.ViewModelProvider
 
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import me.bush.translator.*
@@ -29,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.bindToActivityLifecycle(this)
 
+        val saveButton: Button = findViewById(R.id.saveMenu)
+        saveButton.setOnClickListener { showPopup(it) }
     }
 
     fun translate(text: String) {
@@ -37,6 +45,41 @@ class MainActivity : AppCompatActivity() {
             val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
             viewModel.translated.value = translation.translatedText
             Log.i("UPDATED", viewModel.translated.value)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.image_menu, menu)
+        return true
+    }
+
+    val test_text = "testing copy text"
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.copy_text -> {
+                Toast.makeText(this, "Copy text selected", Toast.LENGTH_SHORT).show()
+
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip: ClipData = ClipData.newPlainText("Copy Translated Text", test_text)
+                clipboard.setPrimaryClip(clip)
+            }
+
+            R.id.save_image -> {
+                Toast.makeText(this, "Save image selected", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showPopup(view: View) {
+        val popup = PopupMenu(this, view)
+
+        popup.menuInflater.inflate(R.menu.image_menu, popup.menu)
+        popup.show()
+
+        popup.setOnMenuItemClickListener {
+            onOptionsItemSelected(it)
         }
     }
 
