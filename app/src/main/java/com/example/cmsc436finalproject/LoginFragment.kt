@@ -14,11 +14,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.example.cmsc436finalproject.databinding.FragmentLoginBinding
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentLoginBinding
@@ -27,6 +22,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i("Login fragment", "login fragment created")
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         auth = requireNotNull(FirebaseAuth.getInstance())
@@ -56,7 +52,7 @@ class LoginFragment : Fragment() {
                 ).show()
 
                 // TODO: navigate to post login fragment
-                // findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
 
             } else {
                 Toast.makeText(

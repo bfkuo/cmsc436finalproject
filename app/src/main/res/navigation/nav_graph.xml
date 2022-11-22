@@ -2,8 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph">
-    <!-- app:startDestination="@id/loginFragment"> -->
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/registrationFragment"
@@ -15,18 +15,32 @@
 
             />
     </fragment>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.cmsc436finalproject.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_registrationFragment_to_profileFragment"
 
-            />
+        <action
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/accountSettingsFragment" />
+
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountSettingsFragment"
+        android:name="com.example.cmsc436finalproject.AccountSettingsFragment"
+        android:label="fragment_account_settings"
+        tools:layout="@layout/fragment_account_settings">
+
+        <action
+            android:id="@+id/action_profileFragment_to_mainFragment"
+
+            />
     </fragment>
 
 </navigation>

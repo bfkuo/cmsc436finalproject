@@ -1,10 +1,12 @@
 package com.example.cmsc436finalproject
 
 import android.app.Activity
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.text.method.ReplacementTransformationMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,10 @@ import androidx.fragment.app.Fragment
 import com.example.cmsc436finalproject.databinding.FragmentAccountSettingsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 
 
 class AccountSettingsFragment : Fragment() {
@@ -22,6 +28,9 @@ class AccountSettingsFragment : Fragment() {
     private lateinit var binding: FragmentAccountSettingsBinding
     private var validator = Validators()
     private lateinit var user: FirebaseUser
+    private val db = Firebase.firestore
+    private lateinit var firestoreUserRef: DocumentReference
+    private lateinit var storage: FirebaseStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +40,30 @@ class AccountSettingsFragment : Fragment() {
 
         auth = requireNotNull(FirebaseAuth.getInstance())
         user = requireNotNull(auth.currentUser)
+        storage = requireNotNull(FirebaseStorage.getInstance())
+
+        firestoreUserRef = db.collection("users").document(user.uid)
+
+        firestoreUserRef.get().addOnSuccessListener {
+            // get user profile photo
+            val photoUrl = it.get("profilePhotoUrl").toString()
+            Log.i(TAG, "photo url: {$photoUrl}")
+            val photoRef = storage.getReferenceFromUrl(photoUrl)
+
+            photoRef.getBytes(ONE_MEGABYTE)
+                .addOnSuccessListener { byteArray ->
+                    val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                    binding.profilePicture.setImageBitmap(bitmap)
+                }
+                .addOnFailureListener{ e ->
+                    Log.i(TAG, "failed to get byte array", e)
+                }
+
+            // get user display name
+            binding.accountName.setText(it.get("displayName").toString())
+            binding.accountName.inputType = InputType.TYPE_NULL
+        }
+
         setUpEditTextViews(user)
 
 
@@ -40,6 +73,25 @@ class AccountSettingsFragment : Fragment() {
             binding.accountName.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     makeUneditable(binding.accountName)
+                    db.collection("users")
+                        .document(user.uid)
+                        .set("displayName" to binding.accountName.toString())
+                        .addOnSuccessListener {
+                            Toast.makeText(
+                                requireContext(),
+                                "Display name successfully updated",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        .addOnFailureListener {
+                            Log.i(TAG, "Error updating display name in firestore", it)
+                            binding.accountName.setText(user.displayName)
+                            Toast.makeText(
+                                requireContext(),
+                                "Display name could not be changed",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                 }
             }
         }
@@ -71,9 +123,6 @@ class AccountSettingsFragment : Fragment() {
     }
 
     private fun setUpEditTextViews(user: FirebaseUser) {
-        binding.accountName.setText(user.displayName ?: "Account Name")
-        binding.accountName.inputType = InputType.TYPE_NULL
-
         binding.email.setText(user.email ?: "No email set")
         binding.email.inputType = InputType.TYPE_NULL
 
@@ -103,22 +152,35 @@ class AccountSettingsFragment : Fragment() {
     private fun checkValidEmail(user: FirebaseUser) {
         val email = binding.email.text.toString()
         if (!validator.validEmail(email)) {
-            binding.email.setText("")
-            binding.email.hint = "Enter valid email"
+            binding.email.setText(user.email)
             Toast.makeText(
                 requireContext(),
-                getString(R.string.invalid_email),
+                "Email could not be changed; "  + getString(R.string.invalid_email),
                 Toast.LENGTH_LONG
             ).show()
         } else {
             user.updateEmail(email)
                 .addOnCompleteListener() { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Email successfully updated",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        db.collection("users")
+                            .document(user.uid)
+                            .set(hashMapOf("email" to email))
+                            .addOnSuccessListener {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Email successfully updated",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            .addOnFailureListener {
+                                Log.i(TAG, "Error updating email in firestore", it)
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Email could not be changed",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
                     } else {
                         Toast.makeText(
                             requireContext(),
@@ -136,11 +198,10 @@ class AccountSettingsFragment : Fragment() {
     private fun checkValidPassword(user: FirebaseUser) {
         val password = binding.password.text.toString()
         if (!validator.validPassword(password)) {
-            binding.password.setText("")
-            binding.password.hint = "Enter valid password"
+            binding.password.setText("********")
             Toast.makeText(
                 requireContext(),
-                getString(R.string.invalid_password),
+                "Password could not be changed; " + getString(R.string.invalid_password),
                 Toast.LENGTH_LONG
             ).show()
 
@@ -169,6 +230,7 @@ class AccountSettingsFragment : Fragment() {
     }
 
     companion object {
+        private val ONE_MEGABYTE = 1024L * 1024L
         private val TAG = "AccountSettingsFragment.kt"
     }
 }

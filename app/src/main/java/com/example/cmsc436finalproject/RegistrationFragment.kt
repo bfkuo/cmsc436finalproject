@@ -65,6 +65,8 @@ class RegistrationFragment : Fragment() {
             binding.progressBar.visibility = View.GONE
             if (task.isSuccessful) {
                 val user = hashMapOf("email" to auth.currentUser!!.email,
+                                     "displayName" to "Account Name",
+                                     "profilePhotoUrl" to "https://firebasestorage.googleapis.com/v0/b/cmsc436-final-proj.appspot.com/o/default_user.png?alt=media&token=85f802a0-d98a-45d0-ad6b-99e1a9a4426f",
                                      "photos" to mutableListOf<String>())
                 db.collection("users")
                     .document(auth.currentUser!!.uid)

@@ -3,6 +3,7 @@ package com.example.cmsc436finalproject
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -18,14 +19,16 @@ class MainActivity : AppCompatActivity() {
 
         // Init firebase APIs
         FirebaseInitProvider()
+        Log.i("main activity", "firebase init")
 
         setContentView(ActivityMainBinding.inflate(layoutInflater).root)
+        Log.i("main activity", "view inflated")
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.container, AccountSettingsFragment())
-                .commitNow()
-        }
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.beginTransaction()
+//                .add(R.id.container, AccountSettingsFragment())
+//                .commitNow()
+//        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

@@ -33,7 +33,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/ImageView.Circle"
-                app:srcCompat="@drawable/default_user"
                 app:tint="@color/gray"/>
 
             <ImageView
