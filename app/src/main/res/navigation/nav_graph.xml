@@ -38,9 +38,8 @@
         tools:layout="@layout/fragment_account_settings">
 
         <action
-            android:id="@+id/action_profileFragment_to_mainFragment"
-
-            />
+            android:id="@+id/action_signout"
+            app:destination="@id/loginFragment" />
     </fragment>
 
 </navigation>
