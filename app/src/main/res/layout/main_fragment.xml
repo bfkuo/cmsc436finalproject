@@ -8,8 +8,8 @@
 
     <Button
         android:id="@+id/accountButton"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/account"
@@ -18,15 +18,30 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 <!--    Translate From Dropdown    -->
-    <Spinner
-        android:id="@+id/translateFrom"
-        android:layout_width="170dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="65dp"
-        android:background="@drawable/dropdown_bg"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <Spinner-->
+<!--        android:id="@+id/translateFrom"-->
+<!--        android:layout_width="170dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginTop="65dp"-->
+<!--        android:background="@drawable/dropdown_bg"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/dateFilterContainer" style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="@string/label">-->
+
+<!--        <AutoCompleteTextView-->
+<!--            android:id="@+id/datesFilterSpinner"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:inputType="none"-->
+<!--            tools:text="All Time"" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 <!--    Swap Button (Visual)    -->
     <ImageView
@@ -40,9 +55,10 @@
         android:contentDescription="@string/swap_icon"
         app:layout_constraintEnd_toStartOf="@+id/translateTo"
         app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintStart_toEndOf="@+id/translateFrom"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+<!--    app:layout_constraintStart_toEndOf="@+id/translateFrom"-->
 <!--    Translate To Dropdown    -->
     <Spinner
         android:id="@+id/translateTo"
@@ -64,11 +80,12 @@
         android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toTopOf="@+id/saveMenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintHorizontal_bias="0.647"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/translateFrom"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/test_image" />
+
+<!--    app:layout_constraintTop_toBottomOf="@+id/translateFrom"-->
 
     <Button
         android:id="@+id/saveMenu"
@@ -79,5 +96,28 @@
         android:background="@drawable/ic_baseline_save_alt_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/translateFrom2"-->
+<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--        android:layout_width="170dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginTop="65dp"-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:hint="Language"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/swapIcon"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:ignore="MissingConstraints">-->
+
+<!--        <AutoCompleteTextView-->
+<!--            android:id="@+id/autoCompleteFrom"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="none"-->
+<!--            tools:text="Auto" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

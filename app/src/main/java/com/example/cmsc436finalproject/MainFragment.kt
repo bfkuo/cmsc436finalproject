@@ -47,7 +47,7 @@ class MainFragment : Fragment() {
         val saveButton: Button = view.findViewById(R.id.saveMenu)
         saveButton.setOnClickListener { showPopup(it) }
 
-        setupDropdowns()
+//        setupDropdowns()
         menu()
     }
 
@@ -56,6 +56,11 @@ class MainFragment : Fragment() {
 
         // Init firebase APIs
         FirebaseInitProvider()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupDropdowns()
     }
 
     fun translate(text: String) {
@@ -132,43 +137,47 @@ class MainFragment : Fragment() {
 
     private fun setupDropdowns() {
 
-        val translateFrom: Spinner = requireView().findViewById(R.id.translateFrom)
+//        val translateFrom: Spinner = requireView().findViewById(R.id.translateFrom)
         val translateTo : Spinner = requireView().findViewById(R.id.translateTo)
 
         val fromLanguages = resources.getStringArray(R.array.languages)
         val toLanguages = resources.getStringArray(R.array.languages).drop(1)
-
-        // LOOK INTO: mini text-view "hint" above
-        val fromAdapter = object : ArrayAdapter<String>(requireActivity(),
-            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+        
+//        val fromAdapter = object : ArrayAdapter<String>(requireActivity(),
+        val fromAdapter = object : ArrayAdapter<String>(requireContext(),
+            R.layout.dropdown_item,
+//            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
             fromLanguages) {}
+        binding.autoCompleteFrom.setAdapter(fromAdapter)
 
         val toAdapter = object : ArrayAdapter<String>(requireActivity(),
-            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            R.layout.dropdown_item,
+//            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
             toLanguages) {}
 
-        translateFrom.adapter = fromAdapter
+//        translateFrom.adapter = fromAdapter
         translateTo.adapter = toAdapter
 
-        translateFrom.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                var lang = toLanguages[pos]
-                if (lang.equals("Haitian Creole")) lang = "Hatian Creole"
-                if (lang.contains(' ')) lang = lang.replace(' ', '_')
-                if (lang.contains('(')) lang = lang.replace("(", "").replace(")", "")
-
-                val language = checkNotNull(languageOf(lang)) {
-                    Toast.makeText(requireActivity(), "Invalid language to translate from", Toast.LENGTH_SHORT).show()
-                }
-
-                viewModel.from.value = language
-                translate(text)
-
-                Toast.makeText(requireActivity(), text, Toast.LENGTH_SHORT).show()
-            }
-        }
+//        translateFrom.onItemSelectedListener
+//        binding.autoCompleteFrom.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(parent: AdapterView<*>?) {}
+//
+//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+//                var lang = toLanguages[pos]
+//                if (lang.equals("Haitian Creole")) lang = "Hatian Creole"
+//                if (lang.contains(' ')) lang = lang.replace(' ', '_')
+//                if (lang.contains('(')) lang = lang.replace("(", "").replace(")", "")
+//
+//                val language = checkNotNull(languageOf(lang)) {
+//                    Toast.makeText(requireActivity(), "Invalid language to translate from", Toast.LENGTH_SHORT).show()
+//                }
+//
+//                viewModel.from.value = language
+//                translate(text)
+//
+//                Toast.makeText(requireActivity(), text, Toast.LENGTH_SHORT).show()
+//            }
+//        }
 
         translateTo.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -191,7 +200,7 @@ class MainFragment : Fragment() {
             }
         }
 
-        limitDropDownHeight(translateFrom)
+//        limitDropDownHeight(translateFrom)
         limitDropDownHeight(translateTo)
     }
 
