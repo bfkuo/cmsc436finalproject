@@ -32,8 +32,6 @@ class MainFragment : Fragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        Log.i("I'M HERE", "fragment entered")
-
         binding = MainFragmentBinding.inflate(inflater, container, false)
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -61,7 +59,7 @@ class MainFragment : Fragment() {
     }
 
     fun translate(text: String) {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val translator = Translator()
             val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
             viewModel.translated.value = translation.translatedText
@@ -156,8 +154,12 @@ class MainFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                val item = fromLanguages[pos]
-                val language = checkNotNull(languageOf(fromLanguages[pos])) {
+                var lang = toLanguages[pos]
+                if (lang.equals("Haitian Creole")) lang = "Hatian Creole"
+                if (lang.contains(' ')) lang = lang.replace(' ', '_')
+                if (lang.contains('(')) lang = lang.replace("(", "").replace(")", "")
+
+                val language = checkNotNull(languageOf(lang)) {
                     Toast.makeText(requireActivity(), "Invalid language to translate from", Toast.LENGTH_SHORT).show()
                 }
 
@@ -184,6 +186,7 @@ class MainFragment : Fragment() {
                 viewModel.to.value = language
                 translate(text)
 
+//                comes super late
                 Toast.makeText(requireActivity(), viewModel.translated.value, Toast.LENGTH_SHORT).show()
             }
         }
