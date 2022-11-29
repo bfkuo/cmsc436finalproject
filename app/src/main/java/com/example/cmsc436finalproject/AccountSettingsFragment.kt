@@ -1,8 +1,14 @@
 package com.example.cmsc436finalproject
 
+import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
 import android.text.method.ReplacementTransformationMethod
@@ -13,8 +19,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.example.cmsc436finalproject.databinding.FragmentAccountSettingsBinding
+import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
@@ -46,18 +57,18 @@ class AccountSettingsFragment : Fragment() {
 
         firestoreUserRef.get().addOnSuccessListener {
             // get user profile photo
-            val photoUrl = it.get("profilePhotoUrl").toString()
-            Log.i(TAG, "photo url: {$photoUrl}")
-            val photoRef = storage.getReferenceFromUrl(photoUrl)
-
-            photoRef.getBytes(ONE_MEGABYTE)
-                .addOnSuccessListener { byteArray ->
-                    val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-                    binding.profilePicture.setImageBitmap(bitmap)
-                }
-                .addOnFailureListener{ e ->
-                    Log.i(TAG, "failed to get byte array", e)
-                }
+//            val photoUrl = it.get("profilePhotoUrl").toString()
+//            Log.i(TAG, "photo url: {$photoUrl}")
+//            val photoRef = storage.getReferenceFromUrl(photoUrl)
+//
+//            photoRef.getBytes(ONE_MEGABYTE)
+//                .addOnSuccessListener { byteArray ->
+//                    val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+//                    binding.profilePicture.setImageBitmap(bitmap)
+//                }
+//                .addOnFailureListener{ e ->
+//                    Log.i(TAG, "failed to get byte array", e)
+//                }
 
             // get user display name
             binding.accountName.setText(it.get("displayName").toString())
@@ -66,6 +77,27 @@ class AccountSettingsFragment : Fragment() {
 
         setUpEditTextViews(user)
 
+//        binding.editProfilePicture.setOnClickListener {
+//            when {
+//                checkSelfPermission(requireContext(), GALLERY_PERMISSION) == PackageManager.PERMISSION_GRANTED -> {
+//                    openGallery()
+//                }
+//
+//                shouldShowRequestPermissionRationale(GALLERY_PERMISSION) -> {
+//                    binding.root.showSnackbar(
+//                        R.string.need_gallery_permission_string,
+//                        Snackbar.LENGTH_INDEFINITE,
+//                        android.R.string.ok
+//                    ) {
+//                        requestGalleryPermissionLauncher.launch(GALLERY_PERMISSION)
+//                    }
+//                }
+//
+//                else -> {
+//                    requestGalleryPermissionLauncher.launch(GALLERY_PERMISSION)
+//                }
+//            }
+//        }
 
         binding.editAccountName.setOnClickListener {
             makeEditable(binding.accountName, InputType.TYPE_CLASS_TEXT)
@@ -144,6 +176,7 @@ class AccountSettingsFragment : Fragment() {
         imm.showSoftInput(view, InputMethodManager.HIDE_IMPLICIT_ONLY)
         view.hint = ""
     }
+
     private fun EditText.showSoftKeyboard(){
         (context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager)
             .showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
@@ -229,8 +262,30 @@ class AccountSettingsFragment : Fragment() {
         }
     }
 
+
+//    private fun uploadImage(uid: String, uri: Uri): Task<Uri>? {
+//        val storageRef = storage.reference
+//        var downloadUrl: Task<Uri>? = null
+//        storageRef.child(uid).putFile(uri)
+//            .addOnSuccessListener {
+//                Log.i(TAG, "upload image to firebase storage successful")
+//                downloadUrl = it.storage.downloadUrl
+//            }
+//            .addOnFailureListener {
+//                Log.i(TAG, "upload image to firebase storage failed")
+//            }
+//
+//        return downloadUrl
+//    }
+
     companion object {
-        private val ONE_MEGABYTE = 1024L * 1024L
-        private val TAG = "AccountSettingsFragment.kt"
+        private const val ONE_MEGABYTE = 1024L * 1024L
+        private const val TAG = "AccountSettingsFragment.kt"
+        private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
+        private const val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+        private const val TAKE_PHOTO_ACTION = MediaStore.ACTION_IMAGE_CAPTURE
+        private const val PICK_PHOTO_ACTION = Intent.ACTION_PICK
+        private const val CAMERA_CODE = 19
+        private const val PICK_PHOTO_CODE = 20
     }
 }

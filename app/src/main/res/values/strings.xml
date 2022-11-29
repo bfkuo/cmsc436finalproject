@@ -13,4 +13,6 @@
     <string name="invalid_password">Password must be >8 characters and contain at least one number and letter</string>
     <string name="login_failed">Login failed</string>
     <string name="registration_failed">Registration failed</string>
+    <string name="need_camera_permission_string">This app requires your permission in order to open the camera application.</string>
+    <string name="need_gallery_permission_string">This app requires your permission in order to open the image gallery</string>
 </resources>
