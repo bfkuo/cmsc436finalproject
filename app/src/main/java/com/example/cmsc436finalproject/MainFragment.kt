@@ -137,8 +137,7 @@ class MainFragment : Fragment() {
 
         val fromLanguages = resources.getStringArray(R.array.languages)
         val toLanguages = resources.getStringArray(R.array.languages).drop(1)
-
-        // LOOK INTO: mini text-view "hint" above
+        
         val fromAdapter = object : ArrayAdapter<String>(requireActivity(),
             androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
             fromLanguages) {}
