@@ -25,12 +25,24 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import com.example.cmsc436finalproject.databinding.FragmentMainBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.TextRecognizer
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
+
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private lateinit var photoFile: File
+
+    // InputImage needed for text recognition
+    private lateinit var inputImage: InputImage
+
+    private lateinit var textRecognizer: TextRecognizer
+    private lateinit var recognizedText: String
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -173,13 +185,51 @@ class MainFragment : Fragment() {
             val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
             binding.photoView.setImageBitmap(takenImage)
 
+            // initialize inputImage for text recognition using bitmap
+            inputImage = InputImage.fromBitmap(takenImage, 0)
+            recognizeText()
+
         } else if (requestCode == PICK_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
             // get image from uri
             val photoUri = data?.data;
             binding.photoView.setImageURI(photoUri)
 
+            // initialize inputImage for text recognition using URI
+            inputImage = InputImage.fromFilePath(requireContext(), photoUri!!)
+            recognizeText()
+
         } else {
             super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun recognizeText() {
+        textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        try {
+
+            val textTaskResult = textRecognizer.process(inputImage).addOnSuccessListener { text->
+                recognizedText = text.text
+                Toast.makeText(
+                    requireContext(),
+                    recognizedText,
+                    Toast.LENGTH_LONG
+                ).show()
+
+            }.addOnFailureListener { e->
+
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to recognize text due to ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+        } catch (e: Exception) {
+            Toast.makeText(
+                requireContext(),
+                "Failed to prepare image due to ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
