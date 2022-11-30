@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,11 +21,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
-
             <Button
                 android:id="@+id/accountButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/account"
@@ -43,22 +42,21 @@
             <!--    Translate From Dropdown    -->
             <Spinner
                 android:id="@+id/translateFrom"
-                android:layout_width="160dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="20dp"
+                android:layout_width="155dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:paddingStart="0dp"
                 android:background="@drawable/dropdown_bg"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!--    Swap Button (Functional)    -->
-            <Button
+            <!--    Swap Button (Visual)    -->
+            <ImageView
                 android:id="@+id/swapIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="19dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/swap"
                 android:contentDescription="@string/swap_icon"
@@ -70,11 +68,10 @@
             <!--    Translate To Dropdown    -->
             <Spinner
                 android:id="@+id/translateTo"
-                android:layout_width="160dp"
-                android:layout_height="48dp"
+                android:layout_width="155dp"
+                android:layout_height="32dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:paddingStart="0dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/dropdown_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/accountButton" />
@@ -95,14 +92,15 @@
             app:layout_constraintTop_toBottomOf="@+id/translateFrom"
             app:srcCompat="@drawable/ic_baseline_vertical_align_top_24"
             tools:layout_editor_absoluteX="21dp"
-            tools:layout_editor_absoluteY="148dp" />
+            tools:layout_editor_absoluteY="148dp"
+            />
 
         <Button
             android:id="@+id/takePhoto"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:gravity="center_horizontal"
-            android:text="Take photo" />
+            android:text="Take photo"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -110,29 +108,19 @@
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <TextView
-                android:id="@+id/photoText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/black"
-                android:layout_weight="1"
-                android:scrollbars = "vertical"
-                android:text="Translated Text" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/copyText"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/ic_baseline_copy"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:enabled="true"
+                android:background="@drawable/ic_baseline_save_alt_24"
                 android:gravity="end"
                 android:text="Button" />
-
         </LinearLayout>
 
 
