@@ -19,14 +19,12 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
 import android.provider.MediaStore
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -37,7 +35,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
-import com.example.cmsc436finalproject.databinding.FragmentMainBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -52,14 +49,11 @@ class MainFragment : Fragment() {
     private lateinit var photoFile: File
 
     private lateinit var viewModel: MainViewModel
-    private var text: String = "Bush's translator is so cool!"
-
+    private var text: String = "Hello! This is where translated text will show up :)"
 
     // InputImage needed for text recognition
     private lateinit var inputImage: InputImage
-
     private lateinit var textRecognizer: TextRecognizer
-    private lateinit var recognizedText: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -120,25 +114,38 @@ class MainFragment : Fragment() {
             }
         }
 
-        binding.saveMenu.setOnClickListener {
-            val bitmap = binding.photoView.drawable.toBitmap()
-            // save image to gallery and reset ImageView
-            MediaStore.Images.Media.insertImage(requireContext().contentResolver, bitmap, "image", null)
-            binding.photoView.setImageResource(R.drawable.ic_baseline_vertical_align_top_24)
-        }
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val saveButton: Button = view.findViewById(R.id.saveMenu)
-        saveButton.setOnClickListener { showPopup(it) }
+        val copyTranslated: Button = view.findViewById(R.id.copyText)
+        copyTranslated.setOnClickListener {
+            Toast.makeText(activity, "Copied to clipboard.", Toast.LENGTH_SHORT).show()
 
-        setupDropdowns()
-        menu()
+            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip: ClipData = ClipData.newPlainText("Copy Translated Text", viewModel.translated.value)
+            clipboard.setPrimaryClip(clip)
+        }
+
+//        swap languages chosen (from <=> to)
+        val swapButton: Button = view.findViewById(R.id.swapIcon)
+        swapButton.setOnClickListener {
+            if (viewModel.from.value.toString().lowercase() != "auto") {
+
+                val temp = viewModel.to.value
+                viewModel.to.value = viewModel.from.value
+                viewModel.from.value = temp
+
+            } else {
+                Toast.makeText(requireActivity(), "Invalid language to translate to", Toast.LENGTH_SHORT).show()
+            }
+
+            setupDropdowns()
+        }
+
+        binding.photoText.movementMethod = ScrollingMovementMethod()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,76 +154,20 @@ class MainFragment : Fragment() {
         // Init firebase APIs
         FirebaseInitProvider()
     }
+    override fun onResume() {
+        super.onResume()
+        binding.photoText.text = viewModel.translated.value
+        setupDropdowns()
+    }
 
     fun translate(text: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             val translator = Translator()
             val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
             viewModel.translated.value = translation.translatedText
-            Toast.makeText(activity, "UPDATED:" + viewModel.translated.value, Toast.LENGTH_SHORT).show()
-        }
-    }
 
-    fun menu() {
-        // The usage of an interface lets you inject your own implementation
-        val menuHost: MenuHost = requireActivity()
-
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                menuInflater.inflate(R.menu.image_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-                when (menuItem.itemId) {
-                    R.id.copy_text -> {
-                        Toast.makeText(activity, "Copy text selected", Toast.LENGTH_SHORT).show()
-
-                        val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        val clip: ClipData = ClipData.newPlainText("Copy Translated Text", viewModel.translated.value)
-                        clipboard.setPrimaryClip(clip)
-                        true
-                    }
-
-                    R.id.save_image -> {
-                        Toast.makeText(activity, "Save image selected", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-                    else -> false
-                }
-                return true
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    //    val test_text = "testing copy text"
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.copy_text -> {
-                Toast.makeText(activity, "Copy text selected", Toast.LENGTH_SHORT).show()
-
-                val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip: ClipData = ClipData.newPlainText("Copy Translated Text", viewModel.translated.value)
-                clipboard.setPrimaryClip(clip)
-            }
-
-            R.id.save_image -> {
-                Toast.makeText(activity, "Save image selected", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun showPopup(view: View) {
-        val popup = PopupMenu(requireActivity(), view)
-
-        popup.menuInflater.inflate(R.menu.image_menu, popup.menu)
-        popup.show()
-
-        popup.setOnMenuItemClickListener {
-            onOptionsItemSelected(it)
+//            update translated text view here for faster performance
+            binding.photoText.text = viewModel.translated.value
         }
     }
 
@@ -239,23 +190,36 @@ class MainFragment : Fragment() {
         translateFrom.adapter = fromAdapter
         translateTo.adapter = toAdapter
 
+//        process data
+        var fromLang = viewModel.from.value.toString()
+        if (fromLang.lowercase().equals("hatian_creole")) fromLang = "Haitian Creole"
+        if (fromLang.contains('_')) {
+            fromLang = fromLang.split('_').joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
+        }
+
+        var toLang = viewModel.to.value.toString()
+        if (toLang.lowercase().equals("hatian_creole")) toLang = "Haitian Creole"
+        if (toLang.contains('_')) {
+            toLang = toLang.split('_').joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
+        }
+
+        translateFrom.setSelection(fromAdapter.getPosition(fromLang))
+        translateTo.setSelection(toAdapter.getPosition(toLang))
+
         translateFrom.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                var lang = toLanguages[pos]
+                var lang = fromLanguages[pos]
                 if (lang.equals("Haitian Creole")) lang = "Hatian Creole"
                 if (lang.contains(' ')) lang = lang.replace(' ', '_')
-                if (lang.contains('(')) lang = lang.replace("(", "").replace(")", "")
 
                 val language = checkNotNull(languageOf(lang)) {
                     Toast.makeText(requireActivity(), "Invalid language to translate from", Toast.LENGTH_SHORT).show()
                 }
 
                 viewModel.from.value = language
-                translate(text)
-
-                Toast.makeText(requireActivity(), text, Toast.LENGTH_SHORT).show()
+//                translate(text)
             }
         }
 
@@ -266,7 +230,6 @@ class MainFragment : Fragment() {
                 var lang = toLanguages[pos]
                 if (lang.equals("Haitian Creole")) lang = "Hatian Creole"
                 if (lang.contains(' ')) lang = lang.replace(' ', '_')
-                if (lang.contains('(')) lang = lang.replace("(", "").replace(")", "")
 
                 val language = checkNotNull(languageOf(lang)) {
                     Toast.makeText(requireActivity(), "Invalid language to translate to", Toast.LENGTH_SHORT).show()
@@ -274,9 +237,7 @@ class MainFragment : Fragment() {
 
                 viewModel.to.value = language
                 translate(text)
-
 //                comes super late
-                Toast.makeText(requireActivity(), viewModel.translated.value, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -391,13 +352,11 @@ class MainFragment : Fragment() {
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
         try {
 
-            val textTaskResult = textRecognizer.process(inputImage).addOnSuccessListener { text->
-                recognizedText = text.text
-                Toast.makeText(
-                    requireContext(),
-                    recognizedText,
-                    Toast.LENGTH_LONG
-                ).show()
+            textRecognizer.process(inputImage).addOnSuccessListener { recognized ->
+
+                text = recognized.text
+                binding.photoText.text = text
+                translate(text)
 
             }.addOnFailureListener { e->
 

@@ -114,7 +114,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/saveMenu"
+                android:id="@+id/copyText"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:enabled="true"
