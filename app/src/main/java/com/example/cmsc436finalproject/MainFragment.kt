@@ -49,7 +49,7 @@ class MainFragment : Fragment() {
     private lateinit var photoFile: File
 
     private lateinit var viewModel: MainViewModel
-    private var text: String = "Hello! This is where translated text will show up :)"
+    private var text: String = "Hello! This is where translated text will show up. Upload or take a picture to get started!"
 
     // InputImage needed for text recognition
     private lateinit var inputImage: InputImage
