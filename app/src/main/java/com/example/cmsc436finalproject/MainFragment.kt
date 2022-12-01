@@ -172,16 +172,21 @@ class MainFragment : Fragment() {
     }
 
     fun translate(text: String) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val translator = Translator()
-            val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
+        binding.translateButton.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val translator = Translator()
 
-            viewModel.translated.value = translation.translatedText
+
+                val translation =
+                    translator.translate(text, viewModel.to.value, viewModel.from.value)
+
+                viewModel.translated.value = translation.translatedText
 
 //            update translated text view here for faster performance
-            binding.photoText.text = viewModel.translated.value
+                binding.photoText.text = viewModel.translated.value
 
-            addToHistory(text, translation.translatedText)
+                addToHistory(text, translation.translatedText)
+            }
         }
     }
 
@@ -250,7 +255,9 @@ class MainFragment : Fragment() {
                 }
 
                 viewModel.to.value = language
+
                 translate(text)
+
 //                comes super late
             }
         }
@@ -346,7 +353,9 @@ class MainFragment : Fragment() {
 
             // initialize inputImage for text recognition using bitmap
             inputImage = InputImage.fromBitmap(takenImage, 0)
+
             recognizeText()
+
 
         } else if (requestCode == PICK_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
             // get image from uri
@@ -355,7 +364,10 @@ class MainFragment : Fragment() {
 
             // initialize inputImage for text recognition using URI
             inputImage = InputImage.fromFilePath(requireContext(), photoUri!!)
+
+
             recognizeText()
+
 
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -370,10 +382,13 @@ class MainFragment : Fragment() {
 
                 text = recognized.text
                 binding.photoText.text = text
+
+
                 translate(text)
 
-            }.addOnFailureListener { e->
 
+
+            }.addOnFailureListener { e->
                 Toast.makeText(
                     requireContext(),
                     "Failed to recognize text due to ${e.message}",
@@ -391,12 +406,16 @@ class MainFragment : Fragment() {
     }
 
     private fun addToHistory(transFrom: String, transTo: String) {
-        val hist = hashMapOf( "transFrom" to transFrom,
-                                "transTo" to transTo)
+        auth = requireNotNull(FirebaseAuth.getInstance())
+
+        val hist = hashMapOf("From" to viewModel.from.value.toString(),
+                                "trans1" to transFrom,
+                            "To" to viewModel.to.value.toString(),
+                                "trans2" to transTo)
+
         val userHistory = db.collection("users")
                             .document(auth.currentUser!!.uid)
                             .collection("history")
-
         userHistory
             .document()
             .set(hist)

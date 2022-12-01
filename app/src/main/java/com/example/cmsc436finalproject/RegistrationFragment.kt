@@ -67,9 +67,10 @@ class RegistrationFragment : Fragment() {
             if (task.isSuccessful) {
                 //an empty document to initialize user history collection
                 val hist = hashMapOf( "transFrom" to "",
-                                        "transTo" to "")
+                                        "transTo" to "",)
                 val user = hashMapOf("email" to auth.currentUser!!.email,
-                                     "displayName" to "Account Name")
+                                     "displayName" to "Account Name",
+                                    "numberOfTrans" to 0)
 
                 //creates a document labeled with unique user ID in "user" collection
                 val userID = db.collection("users").document(auth.currentUser!!.uid)
