@@ -116,4 +116,15 @@
     <string name="swap_icon">Swap Icon</string>
     <string name="need_camera_permission_string">This app requires your permission in order to open the camera application.</string>
     <string name="need_gallery_permission_string">This app requires your permission in order to open the image gallery</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_register">Register</string>
+    <string name="underline_register"><u>Register</u></string>
+    <string name="welcome">Welcome !</string>
+    <string name="invalid_email">Not a valid email</string>
+    <string name="invalid_password">Password must be >8 characters and contain at least one number and letter</string>
+    <string name="login_failed">Login failed</string>
+    <string name="registration_failed">Registration failed</string>
 </resources>
