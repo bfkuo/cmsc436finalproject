@@ -1,6 +1,6 @@
 <resources>
     <string-array name="languages">
-            <!--        <item>Select a language:</item>-->
+        <!--        <item>Select a language:</item>-->
         <item>Auto</item>
         <item>Afrikaans</item>
         <item>Albanian</item>

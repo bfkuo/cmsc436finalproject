@@ -65,12 +65,34 @@ class RegistrationFragment : Fragment() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
+                //an empty document to initialize user history collection
+                val hist = hashMapOf( "transFrom" to "",
+                                        "transTo" to "")
                 val user = hashMapOf("email" to auth.currentUser!!.email,
                                      "displayName" to "Account Name")
-                db.collection("users")
-                    .document(auth.currentUser!!.uid)
+
+                //creates a document labeled with unique user ID in "user" collection
+                val userID = db.collection("users").document(auth.currentUser!!.uid)
+
+                userID
                     .set(user)
                     .addOnSuccessListener {
+                        userID
+                            .collection("history")
+                            .document()
+                            .set(hist)
+                            .addOnSuccessListener {
+                                Log.i(TAG, "DocumentSnapshot successfully written!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.i(TAG, "Error adding document", e)
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.registration_failed),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         Log.i(TAG, "DocumentSnapshot successfully written!")
 
                         Toast.makeText(
@@ -83,7 +105,7 @@ class RegistrationFragment : Fragment() {
                         // findNavController().navigate((R.id.action_registrationFragment_to_settingsFragment))
                         findNavController().navigate(R.id.action_registrationFragment_to_mainFragment)
                     }
-                    .addOnFailureListener{ e ->
+                    .addOnFailureListener { e ->
                         Log.i(TAG, "Error adding document", e)
 
                         Toast.makeText(
@@ -91,6 +113,7 @@ class RegistrationFragment : Fragment() {
                             getString(R.string.registration_failed),
                             Toast.LENGTH_LONG
                         ).show()
+
                     }
 
             } else {

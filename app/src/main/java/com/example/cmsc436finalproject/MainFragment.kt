@@ -42,6 +42,8 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MainFragment : Fragment() {
@@ -55,6 +57,8 @@ class MainFragment : Fragment() {
     // InputImage needed for text recognition
     private lateinit var inputImage: InputImage
     private lateinit var textRecognizer: TextRecognizer
+    private lateinit var auth: FirebaseAuth
+    private var db = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -148,7 +152,8 @@ class MainFragment : Fragment() {
 
         binding.accountButton.setOnClickListener {
             // TODO: change to navigate to account history
-            findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
+           // findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_historyFragment)
         }
 
         binding.photoText.movementMethod = ScrollingMovementMethod()
@@ -170,10 +175,13 @@ class MainFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             val translator = Translator()
             val translation = translator.translate(text, viewModel.to.value, viewModel.from.value)
+
             viewModel.translated.value = translation.translatedText
 
 //            update translated text view here for faster performance
             binding.photoText.text = viewModel.translated.value
+
+            addToHistory(text, translation.translatedText)
         }
     }
 
@@ -380,6 +388,18 @@ class MainFragment : Fragment() {
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    private fun addToHistory(transFrom: String, transTo: String) {
+        val hist = hashMapOf( "transFrom" to transFrom,
+                                "transTo" to transTo)
+        val userHistory = db.collection("users")
+                            .document(auth.currentUser!!.uid)
+                            .collection("history")
+
+        userHistory
+            .document()
+            .set(hist)
     }
 
     companion object {

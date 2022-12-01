@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/accountSettingsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
     </fragment>
 
     <fragment
@@ -59,6 +62,17 @@
         <action
             android:id="@+id/action_signout"
             app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.cmsc436finalproject.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history">
+
+        <action
+            android:id="@+id/action_historyFragment_to_settingsFragment"
+            app:destination="@id/accountSettingsFragment" />
     </fragment>
 
 </navigation>
