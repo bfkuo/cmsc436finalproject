@@ -51,8 +51,9 @@ class LoginFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                // TODO: navigate to post login fragment
-                findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
+                // for debugging purposes:
+                // findNavController().navigate(R.id.action_loginFragment_to_settingsFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
 
             } else {
                 Toast.makeText(

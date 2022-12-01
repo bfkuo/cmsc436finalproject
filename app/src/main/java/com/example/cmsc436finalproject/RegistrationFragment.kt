@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.cmsc436finalproject.databinding.FragmentRegistrationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -64,11 +65,8 @@ class RegistrationFragment : Fragment() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
-                val translationList: MutableList<MutableList<String>> = ArrayList()
                 val user = hashMapOf("email" to auth.currentUser!!.email,
-                                     "displayName" to "Account Name",
-                                     //"profilePhotoUrl" to "https://firebasestorage.googleapis.com/v0/b/cmsc436-final-proj.appspot.com/o/default_user.png?alt=media&token=85f802a0-d98a-45d0-ad6b-99e1a9a4426f",
-                                     "translations" to translationList)
+                                     "displayName" to "Account Name")
                 db.collection("users")
                     .document(auth.currentUser!!.uid)
                     .set(user)
@@ -80,7 +78,10 @@ class RegistrationFragment : Fragment() {
                             getString(R.string.welcome),
                             Toast.LENGTH_LONG
                         ).show()
-                        // TODO: navigate to logged in fragment
+
+                        // for debugging purposes:
+                        // findNavController().navigate((R.id.action_registrationFragment_to_settingsFragment))
+                        findNavController().navigate(R.id.action_registrationFragment_to_mainFragment)
                     }
                     .addOnFailureListener{ e ->
                         Log.i(TAG, "Error adding document", e)

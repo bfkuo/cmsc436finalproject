@@ -106,9 +106,11 @@ class AccountSettingsFragment : Fragment() {
             binding.accountName.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     makeUneditable(binding.accountName)
+                    val accountName = binding.accountName.text.toString()
+                    Log.i("CHANGE ACCOUNT NAME TO", accountName)
                     db.collection("users")
                         .document(user.uid)
-                        .set("displayName" to binding.accountName.toString())
+                        .update(mapOf("displayName" to accountName))
                         .addOnSuccessListener {
                             Toast.makeText(
                                 requireContext(),
@@ -204,7 +206,7 @@ class AccountSettingsFragment : Fragment() {
                     if (task.isSuccessful) {
                         db.collection("users")
                             .document(user.uid)
-                            .set(hashMapOf("email" to email))
+                            .update(mapOf("email" to email))
                             .addOnSuccessListener {
                                 Toast.makeText(
                                     requireContext(),

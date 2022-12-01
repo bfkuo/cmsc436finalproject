@@ -6,14 +6,29 @@
     app:startDestination="@id/loginFragment">
 
     <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.cmsc436finalproject.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@id/accountSettingsFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/registrationFragment"
         android:name="com.example.cmsc436finalproject.RegistrationFragment"
         android:label="fragment_registration"
         tools:layout="@layout/fragment_registration">
 
-        <action android:id="@+id/action_registrationFragment_to_profileFragment"
+        <action
+            android:id="@+id/action_registrationFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
 
-            />
+        <action
+            android:id="@+id/action_registrationFragment_to_settingsFragment"
+            app:destination="@id/accountSettingsFragment" />
     </fragment>
 
     <fragment
@@ -23,12 +38,16 @@
         tools:layout="@layout/fragment_login">
 
         <action
-            android:id="@+id/action_loginFragment_to_profileFragment"
-            app:destination="@id/accountSettingsFragment" />
+            android:id="@+id/action_loginFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
 
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_settingsFragment"
+            app:destination="@id/accountSettingsFragment" />
     </fragment>
 
     <fragment
