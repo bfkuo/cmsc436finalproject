@@ -1,23 +1,29 @@
 package com.example.cmsc436finalproject
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.navigation.NavController
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.example.cmsc436finalproject.databinding.FragmentLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 
 
 class LoginFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentLoginBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        auth = requireNotNull(FirebaseAuth.getInstance())
+        if (auth.currentUser != null) {
+            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,7 +31,7 @@ class LoginFragment : Fragment() {
         Log.i("Login fragment", "login fragment created")
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        auth = requireNotNull(FirebaseAuth.getInstance())
+        // auth = requireNotNull(FirebaseAuth.getInstance())
 
         binding.login.setOnClickListener { loginUserAccount() }
         binding.toRegister.setOnClickListener{
