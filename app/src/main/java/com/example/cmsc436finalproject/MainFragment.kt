@@ -53,7 +53,6 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private var text: String = "Hello! This is where translated text will show up. Upload or take a picture to get started!"
-
     // InputImage needed for text recognition
     private lateinit var inputImage: InputImage
     private lateinit var textRecognizer: TextRecognizer
@@ -409,9 +408,9 @@ class MainFragment : Fragment() {
         auth = requireNotNull(FirebaseAuth.getInstance())
 
         val hist = hashMapOf("From" to viewModel.from.value.toString(),
-                                "trans1" to transFrom,
+                                "transFrom" to transFrom,
                             "To" to viewModel.to.value.toString(),
-                                "trans2" to transTo)
+                                "transTo" to transTo)
 
         val userHistory = db.collection("users")
                             .document(auth.currentUser!!.uid)

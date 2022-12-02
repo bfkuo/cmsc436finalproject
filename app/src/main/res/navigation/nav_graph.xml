@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_loginFragment_to_settingsFragment"
             app:destination="@id/accountSettingsFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
     </fragment>
 
     <fragment

@@ -67,7 +67,9 @@ class RegistrationFragment : Fragment() {
             if (task.isSuccessful) {
                 //an empty document to initialize user history collection
                 val hist = hashMapOf( "transFrom" to "",
-                                        "transTo" to "",)
+                                        "transTo" to "",
+                                        "From" to "",
+                                        "To" to "")
                 val user = hashMapOf("email" to auth.currentUser!!.email,
                                      "displayName" to "Account Name",
                                     "numberOfTrans" to 0)
