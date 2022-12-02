@@ -35,6 +35,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -143,6 +144,11 @@ class MainFragment : Fragment() {
             }
 
             setupDropdowns()
+        }
+
+        binding.accountButton.setOnClickListener {
+            // TODO: change to navigate to account history
+            findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
         }
 
         binding.photoText.movementMethod = ScrollingMovementMethod()
