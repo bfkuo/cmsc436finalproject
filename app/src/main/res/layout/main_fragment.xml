@@ -16,11 +16,28 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <View
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_baseline_copy" />
+
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="1"
+                android:text="Decipher"
+                android:textColor="@color/black"
+                android:textSize="35sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/accountButton"
@@ -38,14 +55,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp" >
 
             <!--    Translate From Dropdown    -->
             <Spinner
                 android:id="@+id/translateFrom"
                 android:layout_width="160dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:paddingStart="0dp"
                 android:background="@drawable/dropdown_bg"
@@ -73,7 +91,7 @@
                 android:layout_width="160dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="10dp"
                 android:paddingStart="0dp"
                 android:background="@drawable/dropdown_bg"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +111,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/translateFrom"
-            app:srcCompat="@drawable/ic_baseline_vertical_align_top_24"
+            app:srcCompat="@drawable/downscaled_upload_arrow"
             tools:layout_editor_absoluteX="21dp"
             tools:layout_editor_absoluteY="148dp" />
 
