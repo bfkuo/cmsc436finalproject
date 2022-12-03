@@ -9,7 +9,7 @@
         android:id="@+id/mainFragment"
         android:name="com.example.cmsc436finalproject.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main">
+        tools:layout="@layout/main_fragment">
 
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"

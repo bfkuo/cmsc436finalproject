@@ -3,11 +3,7 @@ package com.example.cmsc436finalproject
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.view.*
 import android.widget.*
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.cmsc436finalproject.databinding.MainFragmentBinding
@@ -34,7 +30,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.FileProvider
-import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.common.InputImage
@@ -52,7 +47,7 @@ class MainFragment : Fragment() {
     private lateinit var photoFile: File
 
     private lateinit var viewModel: MainViewModel
-    private var text: String = "Hello! This is where translated text will show up. Upload or take a picture to get started!"
+    private var text: String = WELCOME_STRING
     // InputImage needed for text recognition
     private lateinit var inputImage: InputImage
     private lateinit var textRecognizer: TextRecognizer
@@ -108,7 +103,7 @@ class MainFragment : Fragment() {
                         Snackbar.LENGTH_INDEFINITE,
                         android.R.string.ok
                     ) {
-                        requestGalleryPermissionLauncher.launch(GALLERY_PERMISSION)
+                    requestGalleryPermissionLauncher.launch(GALLERY_PERMISSION)
                     }
                 }
 
@@ -124,12 +119,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val copyTranslated: Button = view.findViewById(R.id.copyText)
-        copyTranslated.setOnClickListener {
-            Toast.makeText(activity, "Copied to clipboard.", Toast.LENGTH_SHORT).show()
-
+        val copy: Button = view.findViewById(R.id.copyText)
+        copy.setOnClickListener {
             val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip: ClipData = ClipData.newPlainText("Copy Translated Text", viewModel.translated.value)
+            val clip: ClipData = ClipData.newPlainText("Copying text", binding.photoText.text)
             clipboard.setPrimaryClip(clip)
         }
 
@@ -143,10 +136,9 @@ class MainFragment : Fragment() {
                 viewModel.from.value = temp
 
             } else {
-                Toast.makeText(requireActivity(), "Invalid language to translate to", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), "Cannot translate to Auto", Toast.LENGTH_SHORT).show()
             }
 
-            setupDropdowns()
         }
 
         binding.accountButton.setOnClickListener {
@@ -156,6 +148,7 @@ class MainFragment : Fragment() {
         }
 
         binding.photoText.movementMethod = ScrollingMovementMethod()
+        setupDropdowns()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -166,7 +159,8 @@ class MainFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
-        binding.photoText.text = viewModel.translated.value
+        if (viewModel.translated.value.isNotEmpty())
+            binding.photoText.text = viewModel.translated.value
         setupDropdowns()
     }
 
@@ -174,17 +168,13 @@ class MainFragment : Fragment() {
         binding.translateButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val translator = Translator()
-
-
                 val translation =
                     translator.translate(text, viewModel.to.value, viewModel.from.value)
-
                 viewModel.translated.value = translation.translatedText
 
-//            update translated text view here for faster performance
+//                update translated text view here for faster performance
                 binding.photoText.text = viewModel.translated.value
-
-                addToHistory(text, translation.translatedText)
+                addToHistory()
             }
         }
     }
@@ -210,13 +200,13 @@ class MainFragment : Fragment() {
 
 //        process data
         var fromLang = viewModel.from.value.toString()
-        if (fromLang.lowercase().equals("hatian_creole")) fromLang = "Haitian Creole"
+        if (fromLang.lowercase() == "hatian_creole") fromLang = "Haitian Creole"
         if (fromLang.contains('_')) {
             fromLang = fromLang.split('_').joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
         }
 
         var toLang = viewModel.to.value.toString()
-        if (toLang.lowercase().equals("hatian_creole")) toLang = "Haitian Creole"
+        if (toLang.lowercase() == "hatian_creole") toLang = "Haitian Creole"
         if (toLang.contains('_')) {
             toLang = toLang.split('_').joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
         }
@@ -237,7 +227,6 @@ class MainFragment : Fragment() {
                 }
 
                 viewModel.from.value = language
-//                translate(text)
             }
         }
 
@@ -253,24 +242,14 @@ class MainFragment : Fragment() {
                     Toast.makeText(requireActivity(), "Invalid language to translate to", Toast.LENGTH_SHORT).show()
                 }
 
-                viewModel.to.value = language
+                // only translate + update if truly needed
+                if (viewModel.to.value != language)
+                    viewModel.to.value = language
+                    translate(text)
 
-                translate(text)
-
-//                comes super late
             }
         }
 
-        limitDropDownHeight(translateFrom)
-        limitDropDownHeight(translateTo)
-    }
-
-    private fun limitDropDownHeight(dropdown: Spinner) {
-        val popup = Spinner::class.java.getDeclaredField("mPopup")
-        popup.isAccessible = true
-
-        val popupWindow = popup.get(dropdown) as ListPopupWindow
-        popupWindow.height = (200 * resources.displayMetrics.density).toInt()
     }
 
     private val requestCameraPermissionLauncher: ActivityResultLauncher<String> =
@@ -352,9 +331,7 @@ class MainFragment : Fragment() {
 
             // initialize inputImage for text recognition using bitmap
             inputImage = InputImage.fromBitmap(takenImage, 0)
-
             recognizeText()
-
 
         } else if (requestCode == PICK_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
             // get image from uri
@@ -363,10 +340,7 @@ class MainFragment : Fragment() {
 
             // initialize inputImage for text recognition using URI
             inputImage = InputImage.fromFilePath(requireContext(), photoUri!!)
-
-
             recognizeText()
-
 
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -381,11 +355,7 @@ class MainFragment : Fragment() {
 
                 text = recognized.text
                 binding.photoText.text = text
-
-
                 translate(text)
-
-
 
             }.addOnFailureListener { e->
                 Toast.makeText(
@@ -404,13 +374,13 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun addToHistory(transFrom: String, transTo: String) {
+    private fun addToHistory() {
         auth = requireNotNull(FirebaseAuth.getInstance())
 
         val hist = hashMapOf("From" to viewModel.from.value.toString(),
-                                "transFrom" to transFrom,
+                                "transFrom" to text,
                             "To" to viewModel.to.value.toString(),
-                                "transTo" to transTo)
+                                "transTo" to viewModel.translated.value)
 
         val userHistory = db.collection("users")
                             .document(auth.currentUser!!.uid)
@@ -421,6 +391,7 @@ class MainFragment : Fragment() {
     }
 
     companion object {
+        private const val WELCOME_STRING = "Hello! This is where translated text will show up. Upload or take a picture to get started!"
         private const val TAKE_PHOTO_ACTION = MediaStore.ACTION_IMAGE_CAPTURE
         private const val PICK_PHOTO_ACTION = Intent.ACTION_PICK
         private const val CAMERA_PERMISSION = Manifest.permission.CAMERA

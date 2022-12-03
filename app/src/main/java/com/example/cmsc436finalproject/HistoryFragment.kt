@@ -1,19 +1,23 @@
 package com.example.cmsc436finalproject
 
+import android.graphics.Color
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cmsc436finalproject.databinding.FragmentHistoryBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-
-
 
 
 class HistoryFragment : Fragment() {
@@ -23,8 +27,6 @@ class HistoryFragment : Fragment() {
     private val db = Firebase.firestore
 
     //add user name to account history title
-    //
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,12 +34,11 @@ class HistoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
-
-        binding.history.movementMethod = ScrollingMovementMethod()
+//        binding.history.movementMethod = ScrollingMovementMethod()
 
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
 
-        userID?.let {
+        userID.let {
             db.collection("users").document(it)
                 .get()
                 .addOnSuccessListener { document ->
@@ -46,7 +47,7 @@ class HistoryFragment : Fragment() {
                         Log.d(TAG, "DocumentSnapshot data: ${document.data}")
                         newName.append(document.data?.get("displayName"))
                         newName.append("'s History")
-                        binding.title.setText(newName)
+                        binding.title.text = newName
                     } else {
                         Log.d(TAG, "No such document")
                     }
@@ -56,37 +57,6 @@ class HistoryFragment : Fragment() {
                 }
         }
 
-        //history collection reference
-        val histRef = userID?.let {
-            db.collection("users").document(it).collection("history")
-        }
-
-        histRef
-            .get()
-            .addOnSuccessListener { result ->
-                val newText = StringBuilder();
-                for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data.get("From").toString()}")
-                    if(!(document.data.get("From").toString().equals(""))) {
-                        newText.append("[From: ")
-                        newText.append(document.data.get("From"))
-                        newText.append("]\n")
-                        newText.append(document.data.get("transFrom"))
-                        newText.append("\n[To: ")
-                        newText.append(document.data.get("To"))
-                        newText.append("]\n")
-                        newText.append(document.data.get("transTo"))
-                        newText.append("\n\n")
-                    }
-                }
-                binding.history.setText(newText);
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
-            }
-
-
-
         binding.settingButton.setOnClickListener{
             Log.i(HistoryFragment.TAG, "Setting button clicked")
             findNavController().navigate(R.id.action_historyFragment_to_settingsFragment)
@@ -95,17 +65,44 @@ class HistoryFragment : Fragment() {
         return binding.root
     }
 
-//    private fun toStringMap(map: Map<String, Any>): String {
-//        val result = map.toString();
-//        val result2 = result.replace("}", "");
-//        val result3 = result2.replace("{", "");
-//        val result4 = result3.replace(", ", "\n");
-//        val result5 = result4.replace("translateTo", "Translated Text");
-//        val result6 = result5.replace("translateFrom", "Original Text");
-//        val result7 = result6.replace("=", ": ");
-//
-//        return result
-//    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val userID = FirebaseAuth.getInstance().currentUser!!.uid
+
+        //history collection reference
+        val histRef = userID.let {
+            db.collection("users").document(it).collection("history")
+        }
+
+        histRef
+            .get()
+            .addOnSuccessListener { result ->
+                var hist = ArrayList<SpannableStringBuilder>()
+                val blackText = ForegroundColorSpan(Color.BLACK)
+                val smallerText = RelativeSizeSpan(.8f)
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data["From"].toString()}")
+                    if(document.data["From"].toString() != "") {
+
+                        val entry = SpannableStringBuilder("${document.data["transFrom"]}\n${document.data["transTo"]}")
+                        val sepIndex = document.data["transFrom"].toString().length
+                        entry.setSpan(blackText, 0, sepIndex+1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                        entry.setSpan(smallerText, sepIndex+1, entry.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                        hist.add(entry)
+
+                    }
+                }
+                val recyclerView: RecyclerView = view.findViewById(R.id.recyclerHistory)
+                recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                recyclerView.adapter = CustomAdapter(hist)
+
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+
+    }
 
     companion object {
         private const val TAG = "HistoryFragment.kt"
