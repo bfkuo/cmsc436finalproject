@@ -18,6 +18,7 @@ import com.example.cmsc436finalproject.databinding.FragmentHistoryBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.Query
 
 
 class HistoryFragment : Fragment() {
@@ -72,7 +73,10 @@ class HistoryFragment : Fragment() {
 
         //history collection reference
         val histRef = userID.let {
-            db.collection("users").document(it).collection("history")
+            db.collection("users")
+                .document(it)
+                .collection("history")
+                .orderBy("timeCreated", Query.Direction.DESCENDING)
         }
 
         histRef

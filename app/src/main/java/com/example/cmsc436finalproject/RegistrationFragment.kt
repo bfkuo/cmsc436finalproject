@@ -71,8 +71,7 @@ class RegistrationFragment : Fragment() {
                                         "From" to "",
                                         "To" to "")
                 val user = hashMapOf("email" to auth.currentUser!!.email,
-                                     "displayName" to "Account Name",
-                                    "numberOfTrans" to 0)
+                                     "displayName" to "Account Name")
 
                 //creates a document labeled with unique user ID in "user" collection
                 val userID = db.collection("users").document(auth.currentUser!!.uid)

@@ -39,6 +39,8 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class MainFragment : Fragment() {
@@ -377,10 +379,14 @@ class MainFragment : Fragment() {
     private fun addToHistory() {
         auth = requireNotNull(FirebaseAuth.getInstance())
 
+        val time = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+
         val hist = hashMapOf("From" to viewModel.from.value.toString(),
                                 "transFrom" to text,
                             "To" to viewModel.to.value.toString(),
-                                "transTo" to viewModel.translated.value)
+                                "transTo" to viewModel.translated.value,
+                                "timeCreated" to time.format(formatter))
 
         val userHistory = db.collection("users")
                             .document(auth.currentUser!!.uid)
