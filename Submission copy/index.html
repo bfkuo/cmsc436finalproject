@@ -1,29 +1,36 @@
 <html>
-<header><title>Foreign Language Text Recognizer</title></header>
+<header><title>Decipher</title></header>
 <body>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.arial {font-family:Arial, sans-serif;}
+.center {display: block;margin-left:auto;margin-right:auto;width:50%}
 </style>
+
+
 <table class="tg">
   <tr>
-    <td class="tg-031e">Icon</td>
-    <td class="tg-031e">Foreign Language Text Recognizer</td>
+    <td class="tg-031e" style="width:70px"><img src="translate.png" width="50px"></td>
+    <td class="tg-031e">
+      <h1 style="margin-top:10px;line-height:50%">Decipher</h1>
+      <h3 style="line-height:20%">Foreign Language Text Recognizer</h3>
+    </td>
   </tr>
   <tr>
-    <td class="tg-031e" colspan="2">External link to .apk</td>
+    <td class="tg-031e" colspan="2"><a href="https://drive.google.com/file/d/1ECFwNZUA7z8aII87htNccXXJob5I_t7i/view?usp=sharing">External link to .apk</a></td>
   </tr>
   <tr>
-    <td class="tg-031e" colspan="2">External link to source zip</td>
+    <td class="tg-031e" colspan="2"><a href="https://drive.google.com/file/d/1eLM7jTdSGrUdB0orgqFjX8emeUtZ4OxK/view?usp=sharing">External link to source zip</a></td>
   </tr>
   <tr>
     <td class="tg-031e" colspan="2">Foreign Language Text Recognizer is an app intended for helping travelers navigate in a foreign country. The app will recognize foreign text that appears in a picture that users provide, either by taking a picture from within the app or by uploading a picture to the app from the camera roll, then translate the text into the user’s preferred language and replace the original text with the translated text. 
     </td>
   </tr>
   <tr>
-    <td class="tg-031e">screenshot1</td>
-    <td class="tg-031e">screenshot2</td>
+    <td class="tg-031e" width="50%"><img src="dashboard.png" class="center"></td>
+    <td class="tg-031e"><img src="translated.png" class="center"></td>
   </tr>
   <tr>
     <td class="tg-031e" colspan="2">External link to YouTube video</td>
@@ -36,8 +43,11 @@
         <li>androidx.navigation:navigation-ui-ktx:2.5.3</li>
         <li>com.google.firebase.firebase-auth</li>
         <li>com.google.firebase.firestore</li>
+        <li>com.google.firebase.firestore.Query</li>
         <li>com.google.android.gms:play-services-mlkit-text-recognition:18.0.2</li>
         <li>com.github.therealbush:translator:1.0.2</li>
+        <li>java.time.LocalDataTime</li>
+        <li>java.time.format.DateTimeFormat</li>
       </ul>
       <h5>External code</h5>
       <ul>
@@ -47,7 +57,13 @@
         <li>Firebase Authentication and Firestore integration (<a href="https://javascript.plainenglish.io/firebase-authentication-with-firestore-database-78e6e4f348c6">tutorial</a>)</li>
         <li>Spinner/Dropdown (<a href="https://www.youtube.com/watch?v=NoZc2jWu0uA">video</a>, <a href="https://stackoverflow.com/questions/37019941/how-to-add-a-hint-in-spinner-in-xml">tutorial</a>)</li>
         <li>Menu (<a href="https://www.youtube.com/watch?v=oh4YOj9VkVE">video</a>, <a href="https://stackoverflow.com/questions/48626995/how-to-create-custom-popup-menu-using-kotlin-in-androidstudio/48628108#48628108">tutorial</a>)</li>
-      
+        <li>Text Recognition (<a href="https://www.youtube.com/watch?v=VigFgq7h2X0">video</a>)</li>
+        <li>Convert URI and Bitmap to InputImage (<a href="https://developers.google.com/android/reference/com/google/mlkit/vision/common/InputImage">tutorial</a>)</li>
+        <li>Scrollable TextView (<a href="https://www.geeksforgeeks.org/how-to-make-textview-scrollable-in-android/">tutorial</a>)</li>
+        <li>Query data from Firestore (<a href="https://firebase.google.com/docs/firestore/query-data/get-data">tutorial</a>)</li>
+        <li>Create subcollections in Firestore (<a href="https://firebase.google.com/docs/firestore/data-model">tutorial</a>)</li>
+        <li>Add timestamp and format (<a href="https://www.programiz.com/kotlin-programming/examples/current-date-time">tutorial</a>)</li>
+        <li>Order documents by field (<a href="https://firebase.google.com/docs/firestore/query-data/order-limit-data">tutorial</a>)</li>
       </ul>
       <h5>Icons from <a href="https://www.flaticon.com">Flaticon</a></h5>
       <ul>
