@@ -6,7 +6,8 @@ Division of Tasks (From Checkpoint 1)
   * Finds the text in the picture - Thuy
   * Translates the text – Victoria
   * Replaces original text with translated text - Noah
-  * Copy image, copy text, save to image gallery – Victoria
+  * Copy text, save to image gallery – Victoria
+    * Implement copy image if extra time/chance
   * General Account settings (passwords, email, etc.) – Bethany
     * Database stores account info
   * Account history (translated text image) – Victoria
